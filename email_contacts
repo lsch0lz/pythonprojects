@@ -1,0 +1,94 @@
+import cPickle as p
+
+personendatei = 'personenliste.data' # Datei in die, die Liste nachher gespeichert werden soll.
+
+class Person:
+      '''Stellt eine Person da.'''
+      def __init__(self, name, alter, position, adresse, email):
+          self.name = name
+          self.alter = alter
+          self.position = position
+          self.adresse = adresse
+          self.email = email
+          print 'Person %s initialisiert' % self.name
+
+      def auskunft(self):
+          '''Gibt genauere Daten über die Person aus'''
+          print 'Name: "%s" Alter: "%s" Position: "%s" Adresse: "%s" Email: "%s"' %(self.name, self.alter, self.position, self.adresse, self.email)
+
+try:
+    f = file(personendatei)
+    gl = p.load(f) # GL steht fuer GespeicherteListe
+
+except:
+    # 'Ab' steht für 'A'dress'b'uch
+    ab = []
+
+    f = file(personendatei, 'w')
+    p.dump(ab, f)
+    f.close()
+
+    del ab # Loeschen des Adressbuches
+
+    # Wieder einlesen des Adressbuches aus der Datei
+    f = file(personendatei)
+    gl = p.load(f) # GL steht fuer GespeicherteListe
+
+def menu():
+    print 'Willkommen bei Ihrem Adressbuch! Druecken Sie die ...' 
+    print '1 um das(komplette!) Adressbuch einzusehen'          
+    print '2 um einen Namen im Adressbuch zu suchen'              
+    print '3 um einen neuen Kontakt hizuzufuegen'                 
+    print '4 um einen Kontakt im Adressbuch zu loeschen'
+    print '5 um das Adressbuch zu speichern'
+    print '6 um das Menue nocheinmal anzuzeiegen'
+    print '7 um das Programm zu beenden'
+
+
+menu()
+while True:
+    print '- - - - - - - - - - - - - - - - - - - -'
+    option = raw_input('Geben Sie nun bitte eine der Zahlen ein! ')
+    if option == '1':
+        if len(gl) > 0:
+            for item in gl:
+                item.auskunft()
+        else:
+            print 'Das Adressbuch hat leider noch keine Eintraege'
+    elif option == '2':
+        item = raw_input('Geben Sie bitte den Namen ein, den Sie im Adressbuch suchen moechten: ')
+        for pers in gl:
+            if pers.name == item:
+                pers.auskunft()
+                break
+        else:
+            print 'Name nicht im Adressbuch! Ueberpruefen Sie ggf. die Schreibweise!'
+    elif option == '3':
+        neu_name = raw_input('Geben Sie den Namen des neuen Kontaktes ein: ')
+        neu_alter = raw_input('Geben Sie das Alter des neuen Kontaktes ein: ')
+        neu_position = raw_input('Geben Sie die Beziehung zu Ihrem neuen Kontakt ein! z.B. bester Freund: ')
+        neu_adresse = raw_input('Geben Sie den Wohnort(Strasse, Ort, PLZ, und ggf. Land) an: ')
+        neu_email = raw_input('Geben Sie nun die E-Mali-Adresse des Kontaktes ein: ')
+        neu_name = Person(neu_name, neu_alter, neu_position, neu_adresse, neu_email)
+        gl.append(neu_name)
+    elif option == '4':
+        item = raw_input('Geben Sie den Namen des Kontaktes ein, den Sie loeschen moechten:')
+        for pers in gl:
+            if pers.name == item:
+                gl.remove(pers)
+                print 'Kontakt aus dem Adressbuch entfernt!'
+                break
+        else:
+            print 'Name nicht im Adressbuch! Ueberpruefen Sie ggf. die Schreibweise!'
+    elif option == '5':
+        f = file(personendatei, 'w')
+        p.dump(gl, f)
+        f.close()
+        print 'Sicherung des Adressbuches erfolgreich!'
+    elif option == '6':
+        menu()
+    elif option == '7':
+        print 'Auf Wiedersehn!'
+        break
+    else:
+        print 'Nichtgültige Eingabe! Bitte waehlen Sie erneut!'
